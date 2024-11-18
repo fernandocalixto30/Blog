@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+body {
+    font-family: "Roboto", Regular;
+}
+
+form {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    font-family: "Roboto", Regular;
+    border-radius: 10px;
+
+
+}
+
+.container {
+    width: 400px;
+color: #ddd;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.425);
+    margin: 0 auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    background-color: #14141479;
+    border-radius: 10px;
+   
+}
+
+.container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: "Montserrat", Regular;
+    font-size: 35px;
+    color: #007bff;
+    font-weight: 700;
+}
+
+.content-form {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.content-form input {
+    border: none;
+}
+
+.content-form input {
+    font-size: 15px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+    outline: none;
+
+}
+
+.content-form label {
+   
+    font-family: "Roboto", Regular;
+    margin-bottom: 10px;
+}
+
+.button-submit {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 15px;
+}
+
+.button-submit button {
+
+    padding: 12px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #eee;
+    cursor: pointer;
+    transition: .7s;
+
+}
+
+.button-submit button:hover {
+    background-color: #0069d9;
+
+}
+
+.mensagem-senha-incorreta {
+
+    color: red;
+    font-size: 16px;
+}
+
+.senha-invalida {
+    border: 1px solid red !important;
+
+}
+
+.mensagem-erro-cadastro {
+    color: red;
+    font-size: 16px;
+
+}
+
+.mensagem-erro {
+    color: red;
+    font-size: 16px;
+    font-family: Arial;
+    margin-top: 10px;
+}
+
+.mensagem-sucesso {
+    font-size: 20px;
+    font-family: Arial;
+    margin-top: 10px;
+    color: #38da0fe5;
+}
