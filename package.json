@@ -1,11 +1,11 @@
 {
-  "name": "Blog",
+  "name": "blog",
   "private": false,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build .env",
+    "build": "vite build ",
     "lint": "eslint .",
     "preview": "vite preview"
   },
