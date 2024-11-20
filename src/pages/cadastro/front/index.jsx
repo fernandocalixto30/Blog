@@ -88,7 +88,7 @@ const Cadastro = () => {
             // Verifica se o cadastro foi bem-sucedido
             if (!responseCadastro.ok) {
                 const text = await responseCadastro.text();  // Pega o corpo da resposta como texto
-                console.error('Erro na coneexão com o servidor:');
+                console.error('Erro na resposta do cadastro:', text);
                 setErros({ geral: 'Erro ao cadastrar usuário' });
                 setSucessoCadastro(false);
                 return;
@@ -123,7 +123,7 @@ const Cadastro = () => {
             }
     
         } catch (error) {
-            console.error('Erro ao enviar dados:', error);
+            console.error('Erro na conexão com o servidor');
             setErros({ geral: 'Erro ao enviar dados: ' + error.message });
             setSucessoCadastro(false);
         }
