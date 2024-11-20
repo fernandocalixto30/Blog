@@ -2,7 +2,7 @@ import {Routes, Route} from 'react-router-dom'
 
 import Home from './pages/home/home';
 import Login from './pages/Login/front/Login';
-import Cadastro from './pages/cadastro/front';
+import Cadastro from './pages/cadastro/front/';
 import Perfil from './pages/Perfil/Perfil';
 
 export const Router = () => {
