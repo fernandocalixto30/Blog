@@ -123,8 +123,8 @@ const Cadastro = () => {
             }
     
         } catch (error) {
-            console.error('Erro na conexão com o servidor');
-            setErros({ geral: 'Erro ao enviar dados: ' + error.message });
+            console.error('Erro ao enviar dados:', error);
+            setErros({ geral: 'Erro na conexão com o servidor '  });
             setSucessoCadastro(false);
         }
     };
