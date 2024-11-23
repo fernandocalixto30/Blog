@@ -1,17 +1,17 @@
-require('dotenv').config({ path: '../../../../.env' });
+// require('dotenv').config({ path: '../../../../.env' });
 const express = require('express');
 
 
 
 
 const app = express();
-const auth = require('./auth'); // Arquivo de autenticação
-const cors = require('cors'); // Caso esteja fazendo requisição de domínios diferentes
+const auth = require('./auth'); 
+const cors = require('cors');
 
-app.use(cors()); // Caso precise para evitar problemas com CORS
-app.use(express.json()); // Necessário para o express entender o corpo da requisição
+app.use(cors()); 
+app.use(express.json());
 
-app.post('/login', auth); // Rota de login
+app.post('/login', auth);
 
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');

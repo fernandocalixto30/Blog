@@ -1,53 +1,51 @@
-
-
 const bcrypt = require('bcrypt');
 const db = require('./db');
 const Joi = require('joi');
-const jwt = require('jsonwebtoken');
+const { V4 } = require('paseto');
+const { Buffer } = require('buffer');
+const crypto = require('crypto');
+require('dotenv').config();
 
+// Validação de entrada usando Joi
 const schema = Joi.object({
   email: Joi.string().email().required(),
   senha: Joi.string().required(),
 });
 
-/**
- * Gera um token de autenticação para um usuário.
- * @param {object} usuario - O usuário autenticado.
- * @returns {string} O token de autenticação.
- */
+// Gerando o par de chaves ed25519
+const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');
 
-const gerarTokenDeAutenticacao = (usuario) => {
-
-console.log("Gerando token de autenticação para o usuário: ");
+// Convertendo a chave privada para o formato binário (Buffer)
 
 
-  if (!process.env.SECRET_KEY) {
+const chavePrivada = privateKey.export({ type: 'pkcs8', format: 'pem' });
+console.log('Chave Privada:', chavePrivada.toString('hex'));  // Log para garantir que é um Buffer válido
 
+// Função para gerar o token de autenticação
+const gerarTokenDeAutenticacao = async (usuario) => {
+  console.log("Gerando token de autenticação para o usuário:", usuario.nome);
 
+  try {
+    // Usando a chave privada para assinar o token
+    const token = await V4.sign(
+      {
+        email: usuario.email,
+        nome: usuario.nome,
+        exp: Math.floor(Date.now() / 1000) + 3600, // Expira em 1 hora
+        issuer: 'http://localhost:5173/login',
+      },
+      chavePrivada // Passando o Buffer da chave privada gerada
+    );
 
-    throw new Error('Variável de ambiente SECRET_KEY não definida');
-  }  
-
-  const token = jwt.sign(
- 
-
-    {
-      email: usuario.email,
-      nome: usuario.nome,
-    },
-    process.env.SECRET_KEY,
-    {
-      expiresIn: '1h',
-    }
-  );
-  return token;
+    console.log("Token gerado:", token);
+    return token;
+  } catch (error) {
+    console.error('Erro ao gerar o token:', error.message);
+    throw new Error('Falha ao gerar o token');
+  }
 };
 
-/**
- * Autentica um usuário.
- * @param {object} req - A requisição HTTP.
- * @param {object} res - A resposta HTTP.
- */
+// Função de autenticação
 const auth = async (req, res) => {
   try {
     console.log('Iniciando autenticação...');
@@ -56,28 +54,35 @@ const auth = async (req, res) => {
     if (error) {
       return res.status(400).json({ mensagem: 'Dados de entrada inválidos' });
     }
+
     const { email, senha } = req.body;
+
     // Consultando o banco de dados para encontrar o usuário
     const query = 'SELECT * FROM usuarios WHERE email = ?';
     const [usuarioAutenticado] = await db.promise().query(query, [email]);
-    if (!usuarioAutenticado || usuarioAutenticado.length === 0) {
-      return res.status(401).json({ mensagem: 'Usuario não encontardo' });
+
+    if (!usuarioAutenticado?.length) {
+      return res.status(401).json({ mensagem: 'Credenciais inválidas. Por favor, verifique seu e-mail e senha.' });
     }
-    // Verificando se o usuário encontrado tem um nome
+
+    // Verificando se o nome está presente no usuário
     if (!usuarioAutenticado[0].nome) {
-      return res.status(500).json({ mensagem: 'Usuário sem nome' });
+      return res.status(500).json({ mensagem: 'Erro interno: Usuário sem nome' });
     }
+
     // Comparando a senha
     const senhaCorreta = await bcrypt.compare(senha, usuarioAutenticado[0].senha);
     if (!senhaCorreta) {
-      return res.status(401).json({ mensagem: 'Senha incoreta tente novamente!' });
+      return res.status(401).json({ mensagem: 'Credenciais inválidas. Por favor, verifique seu e-mail e senha.' });
     }
+
     // Gerando o token
-    const token = gerarTokenDeAutenticacao(usuarioAutenticado[0]);
+    const token = await gerarTokenDeAutenticacao(usuarioAutenticado[0]);
+
     return res.json({ token, mensagem: 'Autenticação realizada com sucesso' });
   } catch (erroDeAutenticacao) {
     console.error('Erro no servidor:', erroDeAutenticacao.message);
-    return res.status(500).json({ mensagem: erroDeAutenticacao.message, erro: erroDeAutenticacao.message });
+    return res.status(500).json({ mensagem: 'Erro no servidor, tente novamente mais tarde.' });
   }
 };
 

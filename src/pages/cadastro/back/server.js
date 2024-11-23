@@ -2,7 +2,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
-let 
+
 
 // Cria uma instância do Express
 const app = express();
